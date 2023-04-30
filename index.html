@@ -28,6 +28,15 @@
     <!-- JQUERY -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
+    <!-- SWEET ALERT 2 -->
+    <link rel="preload stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.1.9/sweetalert2.min.css"
+        integrity="sha512-cyIcYOviYhF0bHIhzXWJQ/7xnaBuIIOecYoPZBgJHQKFPo+TOBA+BY1EnTpmM8yKDU4ZdI3UGccNGCEUdfbBqw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" as="style" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.1.9/sweetalert2.all.min.js"
+        integrity="sha512-IZ95TbsPTDl3eT5GwqTJH/14xZ2feLEGJRbII6bRKtE/HC6x3N4cHye7yyikadgAsuiddCY2+6gMntpVHL1gHw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <script>
         const c = console.log.bind()
     </script>
@@ -93,7 +102,8 @@
                                 <input type="checkbox" value="remember-me"> Remember me
                             </label>
                         </div> -->
-                        <button class="w-100 btn btn-primary d-flex align-items-center justify-content-center" @click="signIn">
+                        <button class="w-100 btn btn-primary d-flex align-items-center justify-content-center"
+                            @click="signIn">
                             <span class="material-symbols-outlined me-2">login</span>
                             Sign in
                         </button>
@@ -120,70 +130,82 @@
                                 <div class="card-header bg-secondary bg-opacity-25 border-0">
                                     <div class="row">
                                         <div class="col-12 col-lg-6">
-                                            <span class="fs-4" v-cloak>รายรับ-รายจ่าย เดือน{{ thaiMonth[(new Date()).getMonth()] }} {{ new Date().getFullYear() + 543 }}</span>
-                                        </div>
-                                        <div class="col-12 col-lg-6 d-flex justify-content-end">
-                                            <button class="btn btn-sm btn-secondary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#add-data-modal">
-                                                <span class="material-symbols-outlined me-1">add</span>
-                                                รายการ
-                                            </button>
+                                            <span class="fs-4" v-cloak>รายรับ-รายจ่าย เดือน{{
+                                                thaiMonth[(new Date()).getMonth()]
+                                                }}
+                                                {{
+                                                new Date().getFullYear() + 543
+                                                }}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <div class="card p-2 bordered rounded table-responsive">
-                                        <table class="table table-hover text-center" style="overflow-x: auto;">
-                                            <thead class="sticky-top">
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>วันที่</th>
-                                                    <th>รายการ</th>
-                                                    <th>ประเภท</th>
-                                                    <th>รายรับ</th>
-                                                    <th>รายจ่าย</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-for="(data, datai) in filteredData" v-cloak class="align-middle">
-                                                    <td>{{ datai + 1 }}</td>
-                                                    <td>{{ data.date }}</td>
-                                                    <td>{{ data.name }}</td>
-                                                    <td>{{ data.type }}</td>
-                                                    <td>{{ fillComma(data.income) || "" }}</td>
-                                                    <td>{{ fillComma(data.expenses) || "" }}</td>
-                                                    <td>
-                                                        <span class="material-symbols-outlined d-flex flex-column" role="button" @click="see.delIndex = datai; updateList()">delete</span>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                    <th colspan="4">รวม</th>
-                                                    <th>
-                                                        {{
-                                                        fillComma(
+                                    <div class="d-flex flex-column gap-3">
+                                        <div class="d-flex justify-content-end">
+                                            <button class="btn btn-sm btn-secondary d-flex align-items-center"
+                                                data-bs-toggle="modal" data-bs-target="#add-data-modal">
+                                                <span class="material-symbols-outlined me-1">add</span>
+                                                รายการ
+                                            </button>
+                                        </div>
+                                        <div class="card p-2 bordered rounded table-responsive">
+                                            <table class="table table-hover text-center" style="overflow-x: auto;">
+                                                <thead class="sticky-top">
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>วันที่</th>
+                                                        <th>รายการ</th>
+                                                        <th>ประเภท</th>
+                                                        <th>รายรับ</th>
+                                                        <th>รายจ่าย</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="(data, datai) in filteredData" v-cloak
+                                                        class="align-middle">
+                                                        <td>{{ datai + 1 }}</td>
+                                                        <td>{{ data.date }}</td>
+                                                        <td>{{ data.name }}</td>
+                                                        <td>{{ data.type }}</td>
+                                                        <td>{{ fillComma(data.income) || "" }}</td>
+                                                        <td>{{ fillComma(data.expenses) || "" }}</td>
+                                                        <td>
+                                                            <span class="material-symbols-outlined d-flex flex-column"
+                                                                role="button"
+                                                                @click="see.delIndex = datai; updateList()">delete</span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th colspan="4">รวม</th>
+                                                        <th>
+                                                            {{
+                                                            fillComma(
                                                             filteredData.reduce((prev, cur) => !prev.income
-                                                                ? prev += cur.income
-                                                                : prev.income += cur.income
-                                                                , 0)
-                                                        )
-                                                    }}
-                                                    </th>
-                                                    <th>
-                                                        {{
-                                                        fillComma(
+                                                            ? prev += cur.income
+                                                            : prev.income += cur.income
+                                                            , 0)
+                                                            )
+                                                            }}
+                                                        </th>
+                                                        <th>
+                                                            {{
+                                                            fillComma(
                                                             filteredData.reduce((prev, cur) => !prev.expenses
-                                                                ? prev += cur.expenses
-                                                                : prev.expenses += cur.expenses
-                                                                , 0)
-                                                        )
-                                                    }}
-                                                    </th>
-                                                    <th></th>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
+                                                            ? prev += cur.expenses
+                                                            : prev.expenses += cur.expenses
+                                                            , 0)
+                                                            )
+                                                            }}
+                                                        </th>
+                                                        <th></th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -191,7 +213,8 @@
                     </div>
                 </div>
             </template>
-            <div class="modal fade" id="add-data-modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="addDataModalLabel" aria-hidden="true">
+            <div class="modal fade" id="add-data-modal" data-bs-backdrop="static" tabindex="-1"
+                aria-labelledby="addDataModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -207,19 +230,20 @@
                                 <div class="col-12">
                                     <label>ประเภท</label>
                                     <select class="form-select" v-model="input.type">
-                                        <option value="รายรับ">รายรับ</option>
+                                        <option v-for="type in typeList" :value="type">{{ type }}</option>
+                                        <!-- <option value="รายรับ">รายรับ</option>
                                         <option value="รายจ่ายจำเป็น">รายจ่ายจำเป็น</option>
                                         <option value="ค่าบ้าน">ค่าบ้าน</option>
                                         <option value="ค่าอาหาร">ค่าอาหาร</option>
                                         <option value="ค่าเดินทาง">ค่าเดินทาง</option>
-                                        <option value="ค่าซื้อของส่วนตัว">ค่าซื้อของส่วนตัว</option>
+                                        <option value="ค่าซื้อของส่วนตัว">ค่าซื้อของส่วนตัว</option> -->
                                     </select>
                                 </div>
-                                <div class="col-12">
+                                <div class="col-12" v-if="input.type == 'รายรับ'">
                                     <label>รายรับ</label>
                                     <input type="number" class="form-control" v-model="input.income">
                                 </div>
-                                <div class="col-12">
+                                <div class="col-12" v-else>
                                     <label>รายจ่าย</label>
                                     <input type="number" class="form-control" v-model="input.expenses">
                                 </div>
@@ -243,8 +267,7 @@
     <!-- ECHARTS -->
     <script src="https://fastly.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 
-    <script src="firebase.js" type="module" />
-    </script>
+    <script type="module" src="firebase.js"></script>
 </body>
 
 </html>

@@ -32,7 +32,8 @@ const database = getDatabase(app);
 const thaiMonth = [
   'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
   'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
-]
+],
+  typeList = ["ค่าอาหาร", "ค่าเดินทาง", "รายจ่ายส่วนตัว", "รายจ่ายจำเป็น", "รายรับ"]
 
 const vm = Vue.createApp({
   data() {
@@ -48,10 +49,29 @@ const vm = Vue.createApp({
         month: moment().format("MM-YYYY")
       },
       thaiMonth: thaiMonth,
+      typeList: typeList,
       expenses: []
     }
   },
   methods: {
+    initNoti(icon, title) {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3500,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+      })
+
+      Toast.fire({
+        icon: icon,
+        title: title
+      })
+    },
     fillComma(number) {
       return number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : ""
     },
@@ -134,17 +154,17 @@ const vm = Vue.createApp({
       //                 password: this.password
       //             })
       //             .then(() => {
-      //                 alert('user created successfully')
+      //                  this.initNoti('success', 'user created successfully')
       //             })
       //             .catch((error) => {
-      //                 alert(error)
+      //                  this.initNoti('error', error)
       //             });
       //     })
       //     .catch((error) => {
       //         const errorCode = error.code;
       //         const errorMessage = error.message;
       //         // ..
-      //         alert(errorMessage)
+      //                  this.initNoti('error', errorMessage)
       //     });
       signInWithEmailAndPassword(auth, this.email, this.password)
         .then((userCredential) => {
@@ -158,16 +178,16 @@ const vm = Vue.createApp({
           //         last_login: time
           //     })
           //     .then(() => {
-          //         alert('user logged in successfully')
+          //                  this.initNoti('success', 'user logged in successfully')
           //     })
           //     .catch((error) => {
-          //         alert(error)
+          //                  this.initNoti('error', error)
           //     });
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          alert("อีเมลหรือรหัสผ่านผิด")
+          this.initNoti('error', "อีเมลหรือรหัสผ่านผิด")
         });
 
     },
@@ -209,9 +229,10 @@ const vm = Vue.createApp({
           $('#add-data-modal').modal('hide')
           this.getData()
           this.input = {}
+          this.initNoti('success', "อัพเดทรายการสำเร็จ")
         })
         .catch((error) => {
-          alert(error)
+          this.initNoti('error', error)
         })
     },
     addList() {
@@ -236,9 +257,10 @@ const vm = Vue.createApp({
             $('#add-data-modal').modal('hide')
             this.getData()
             this.input = {}
+            this.initNoti('success', "เพิ่มรายการสำเร็จ")
           })
           .catch((error) => {
-            alert(error)
+            this.initNoti('error', error)
           })
       }
     }
