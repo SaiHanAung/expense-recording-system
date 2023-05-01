@@ -1,12 +1,14 @@
 import {
   initializeApp
 } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js";
+
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js";
+
 import {
   getDatabase,
   set,
@@ -236,14 +238,17 @@ const vm = Vue.createApp({
         })
     },
     addList() {
-      let isAdd = false
+      let isAdd = true
 
       if (this.expenses) {
-        Object.keys(this.expenses).forEach(month => {
-          if (month == this.now.month) this.updateList()
-          else isAdd = true
-        })
-      } else isAdd = true
+        for (let month of Object.keys(this.expenses)) {
+          if (month == this.now.month) {
+            isAdd = false
+            this.updateList()
+            break;
+          }
+        }
+      }
 
       if (isAdd) {
         set(ref(database, 'expenses/' + this.now.month), [{
@@ -267,8 +272,43 @@ const vm = Vue.createApp({
   },
   computed: {
     filteredData() {
-      // return this.expenses?.[this.now.month]?.reverse() || []
-      return this.expenses?.[this.now.month]?.sort((prev, cur) => {
+      // /*  */
+      if (!this.see.months) this.see.months = []
+
+      Object.keys(this.expenses).forEach(m => {
+        let findZero = parseInt(m.slice(0, 2));
+        if (findZero === 0) {
+          findZero = parseInt(m.charAt(1));
+        }
+        if (this.see.months.length > 0) {
+          this.see.months.forEach(sm => {
+            if (sm.m != findZero) {
+              // c("sm.m", sm.m, findZero)
+            }
+          })
+        } else {
+          this.see.months.push({
+            m: findZero,
+            m_y: m
+          })
+        }
+      })
+
+      let monthNow = this.now.month
+      let findZero = parseInt(monthNow.slice(0, 2));
+
+      if (findZero === 0) {
+        findZero = parseInt(monthNow.charAt(1));
+      }
+      if (this.see.months.length > 0) {
+        this.see.months[this.see.months.length] = {
+          m: findZero,
+          m_y: monthNow
+        }
+      }
+      // /*  */
+
+      return this.expenses?.[this.see.selectedMonth ? this.see.selectedMonth : this.now.month]?.sort((prev, cur) => {
         let splitDate1 = prev.date.split(/-/g),
           splitDate2 = cur.date.split(/-/g),
           engDate1 = `${splitDate1[2]}/${splitDate1[1]}/${splitDate1[0]}`,
@@ -323,4 +363,6 @@ const vm = Vue.createApp({
   async mounted() {
     await this.checkAuth()
   },
-}).mount("#app")
+})
+
+vm.mount("#app")
