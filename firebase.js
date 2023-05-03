@@ -78,16 +78,17 @@ const vm = Vue.createApp({
       return number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : ""
     },
     initPieChart() {
-      let dom = document.getElementById('chart-container');
-      let myChart = echarts.init(dom, null, {
-        renderer: 'canvas',
-        useDirtyRect: false
-      });
+      let dom = document.getElementById('chart-container'),
+        myChart = echarts.init(dom, null, {
+          renderer: 'canvas',
+          useDirtyRect: false
+        })
 
       let option = {
         title: {
           text: 'รายจ่ายแยกตามประเภท',
-          subtext: `เดือน${thaiMonth[(new Date()).getMonth()]}`,
+          // subtext: `เดือน${thaiMonth[(new Date()).getMonth()]}`,
+          subtext: `เดือน${thaiMonth[this.filteredMonth]}`,
           left: 'center'
         },
         tooltip: {
@@ -276,39 +277,33 @@ const vm = Vue.createApp({
       if (!this.see.months) this.see.months = []
 
       Object.keys(this.expenses).forEach(m => {
-        let findZero = parseInt(m.slice(0, 2));
-        if (findZero === 0) {
-          findZero = parseInt(m.charAt(1));
-        }
-        if (this.see.months.length > 0) {
-          this.see.months.forEach(sm => {
-            if (sm.m != findZero) {
-              // c("sm.m", sm.m, findZero)
-            }
+        let findZeros = parseInt(m.slice(0, 2));
+
+        if (findZeros === 0) findZeros = parseInt(m.charAt(1));
+
+        if (this.see.months.length == 0) {
+          this.see.months.push({
+            m: findZeros,
+            m_y: m
           })
         } else {
-          this.see.months.push({
+          let monthNow = this.now.month,
+            findZero = parseInt(monthNow.slice(0, 2)),
+            notUniq = true
+
+          if (findZero === 0) findZero = parseInt(monthNow.charAt(1));
+
+          if (this.see.months.some(el => el.m_y === monthNow)) notUniq = false
+
+          if (notUniq) this.see.months.push({
             m: findZero,
-            m_y: m
+            m_y: monthNow
           })
         }
       })
-
-      let monthNow = this.now.month
-      let findZero = parseInt(monthNow.slice(0, 2));
-
-      if (findZero === 0) {
-        findZero = parseInt(monthNow.charAt(1));
-      }
-      if (this.see.months.length > 0) {
-        this.see.months[this.see.months.length] = {
-          m: findZero,
-          m_y: monthNow
-        }
-      }
       // /*  */
 
-      return this.expenses?.[this.see.selectedMonth ? this.see.selectedMonth : this.now.month]?.sort((prev, cur) => {
+      const filteredData = this.expenses?.[this.see.selectedMonth ? this.see.selectedMonth : this.now.month]?.sort((prev, cur) => {
         let splitDate1 = prev.date.split(/-/g),
           splitDate2 = cur.date.split(/-/g),
           engDate1 = `${splitDate1[2]}/${splitDate1[1]}/${splitDate1[0]}`,
@@ -317,7 +312,14 @@ const vm = Vue.createApp({
           curDate = new Date(engDate2)
 
         return curDate.getTime() - prevDate.getTime();
-      }) || []
+      }),
+        filteredType = () => {
+          let selectedType = this.see.selectedType
+          return selectedType ? filteredData.filter(el => el.type == selectedType) : filteredData
+        }
+
+      return filteredData
+        && filteredType() || []
     },
     filteredPiechart() {
       let data = []
@@ -343,6 +345,14 @@ const vm = Vue.createApp({
       })
 
       return data
+    },
+    filteredMonth() {
+      let sliceMonth = (m) => m.slice(0, 2),
+        month = this.see.selectedMonth ? sliceMonth(this.see.selectedMonth) : sliceMonth(this.now.month)
+
+      month = month.toString()
+
+      return (month[0] == 0 ? month.slice(-1) : month) - 1
     }
   },
   updated() {

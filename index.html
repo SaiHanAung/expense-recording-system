@@ -89,11 +89,13 @@
                     <div class="col col-sm-10 col-md-8 col-lg-6 col-xl-5">
 
                         <div class="form-floating mb-3">
-                            <input type="email" class="form-control" v-model="email" placeholder="name@example.com">
+                            <input type="email" class="form-control" v-model="email" placeholder="name@example.com"
+                                @keypress.enter="signIn">
                             <label for="floatingInput">Email address</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="password" class="form-control" v-model="password" placeholder="Password">
+                            <input type="password" class="form-control" v-model="password" placeholder="Password"
+                                @keypress.enter="signIn">
                             <label for="floatingPassword">Password</label>
                         </div>
 
@@ -130,24 +132,35 @@
                                 <div class="card-header bg-secondary bg-opacity-25 border-0">
                                     <div class="row">
                                         <div class="col-12 col-lg-6">
-                                            <span class="fs-4" v-cloak>รายรับ-รายจ่าย เดือน{{
-                                                thaiMonth[(new Date()).getMonth()]
+                                            <span class="fs-4" v-cloak>รายรับ-รายจ่าย เดือน{{ thaiMonth[filteredMonth]
                                                 }}
-                                                {{
-                                                new Date().getFullYear() + 543
-                                                }}
+                                                {{ new Date().getFullYear() + 543 }}
                                             </span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card-body">
                                     <div class="d-flex flex-column gap-3">
-                                        <div class="d-flex justify-content-end">
-                                            <button class="btn btn-sm btn-secondary d-flex align-items-center"
-                                                data-bs-toggle="modal" data-bs-target="#add-data-modal">
-                                                <span class="material-symbols-outlined me-1">add</span>
-                                                รายการ
-                                            </button>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <button class="btn btn-sm btn-secondary d-flex align-items-center"
+                                                    data-bs-toggle="modal" data-bs-target="#add-data-modal">
+                                                    <span class="material-symbols-outlined me-1">add</span>
+                                                    รายการ
+                                                </button>
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-end gap-2">
+                                                <button :class="['btn btn-sm d-flex align-items-center', see.selectedMonth ? 'btn-warning' : 'btn-light']"
+                                                    data-bs-toggle="modal" data-bs-target="#filter-month-modal">
+                                                    <span class="material-symbols-outlined">filter_list</span>
+                                                    เดือน
+                                                </button>
+                                                <button :class="['btn btn-sm d-flex align-items-center', see.selectedType ? 'btn-warning' : 'btn-light']"
+                                                    data-bs-toggle="modal" data-bs-target="#filter-type-modal">
+                                                    <span class="material-symbols-outlined">filter_list</span>
+                                                    ประเภท
+                                                </button>
+                                            </div>
                                         </div>
                                         <div class="card p-2 bordered rounded table-responsive">
                                             <table class="table table-hover text-center" style="overflow-x: auto;">
@@ -253,6 +266,60 @@
                             <button class="btn btn-sm btn-success d-flex align-items-center" @click="addList">
                                 <span class="material-symbols-outlined me-2">save</span>
                                 บันทึก
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="filter-month-modal" data-bs-backdrop="static" tabindex="-1"
+                aria-labelledby="filterMonthModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="filterMonthModalLabel">กรองเดือน</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-check" v-for="(m, mi) in see.months" :key="m.m">
+                                <input class="form-check-input" type="radio" name="filter_month" :id="m.m + mi"
+                                    v-model="see.selectedMonth" :value="m.m_y">
+                                <label class="form-check-label" :for="m.m + mi">
+                                    {{ thaiMonth[m.m - 1] }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <button class="btn btn-sm btn-secondary d-flex align-items-center"
+                                @click="see.selectedMonth = null">
+                                <span class="material-symbols-outlined me-1">restart_alt</span>
+                                รีเซ็ต
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="filter-type-modal" data-bs-backdrop="static" tabindex="-1"
+                aria-labelledby="filterTypeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="filterTypeModalLabel">กรองประเภท</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-check" v-for="(type, typei) in typeList" :key="type">
+                                <input class="form-check-input" type="radio" name="filter_type" :id="type + typei"
+                                    v-model="see.selectedType" :value="type">
+                                <label class="form-check-label" :for="type + typei">
+                                    {{ type }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <button class="btn btn-sm btn-secondary d-flex align-items-center"
+                                @click="see.selectedType = null">
+                                <span class="material-symbols-outlined me-1">restart_alt</span>
+                                รีเซ็ต
                             </button>
                         </div>
                     </div>
