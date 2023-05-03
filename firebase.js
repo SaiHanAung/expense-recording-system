@@ -27,6 +27,7 @@ const firebaseConfig = {
   measurementId: "G-RR8EJMHZVQ"
 };
 
+const c = console.log.bind()
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const database = getDatabase(app);
@@ -77,51 +78,108 @@ const vm = Vue.createApp({
     fillComma(number) {
       return number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : ""
     },
-    initPieChart() {
+    initChart() {
       let dom = document.getElementById('chart-container'),
-        myChart = echarts.init(dom, null, {
-          renderer: 'canvas',
-          useDirtyRect: false
-        })
+        myChart = echarts.init(dom),
+        option,
+        dates = [],
+        dailyExpenses = []
 
-      let option = {
-        title: {
-          text: 'รายจ่ายแยกตามประเภท',
-          // subtext: `เดือน${thaiMonth[(new Date()).getMonth()]}`,
-          subtext: `เดือน${thaiMonth[this.filteredMonth]}`,
-          left: 'center'
-        },
-        tooltip: {
-          trigger: 'item',
-          formatter: '{b} : {c} บาท ({d}%)'
-        },
-        legend: {
-          bottom: 10,
-          left: 'center',
-          data: this.filteredPiechart.map(el => el.name)
-        },
-        series: [{
-          type: 'pie',
-          radius: '65%',
-          center: ['50%', '50%'],
-          selectedMode: 'single',
-          data: this.filteredPiechart || [],
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)'
+      if (this.see.selectedChart == "pie") {
+        option = {
+          title: {
+            text: 'รายจ่ายแยกตามประเภท',
+            subtext: `เดือน${thaiMonth[this.filteredMonth]}`,
+            left: 'center'
+          },
+          tooltip: {
+            trigger: 'item',
+            formatter: '{b} : {c} บาท ({d}%)'
+          },
+          legend: {
+            bottom: 10,
+            left: 'center',
+            data: this.filteredPiechart.map(el => el.name)
+          },
+          series: [{
+            type: 'pie',
+            radius: '65%',
+            center: ['50%', '50%'],
+            selectedMode: 'single',
+            data: this.filteredPiechart || [],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
             }
-          }
-        }]
-      };
-
-      if (option && typeof option === 'object') {
-        myChart.setOption(option);
+          }]
+        }
       }
 
-      // myChart._chartsMap["_ec_\u0000series\u00000\u00000_series.pie"]._data._store._chunks[0][0] += 100
-      // c(myChart._chartsMap["_ec_\u0000series\u00000\u00000_series.pie"]._data._store._chunks[0])
+      this.filteredData.map(el => {
+        let date = el.date.slice(0, 2),
+          sliceZero = date[0] == 0 ? date[1] : date
+
+        if (dates.indexOf(sliceZero) == -1) dates.push(sliceZero)
+        if (!dailyExpenses[el.date]) dailyExpenses[el.date] = []
+        dailyExpenses[el.date].push(el.expenses)
+      })
+
+      let reducedDailyExpenses = Object.values(dailyExpenses).reduce((acc, curr) => {
+        let reducedInnerArr = curr.reduce((innerAcc, innerCurr) => {
+          return innerAcc + innerCurr;
+        }, 0);
+        return [...acc, reducedInnerArr];
+      }, []);
+
+      if (this.see.selectedChart == "bar") {
+        option = {
+          title: {
+            text: 'รายจ่ายประจำวัน',
+            subtext: `เดือน${thaiMonth[this.filteredMonth]}`,
+            left: 'center'
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow'
+            }
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: [
+            {
+              type: 'category',
+              data: dates.reverse(),
+              axisTick: {
+                alignWithLabel: true
+              }
+            }
+          ],
+          yAxis: [
+            {
+              type: 'value'
+            }
+          ],
+          series: [
+            {
+              name: 'Direct',
+              type: 'bar',
+              barWidth: '60%',
+              data: reducedDailyExpenses.reverse()
+            }
+          ]
+        }
+      }
+
+      myChart.setOption(option)
+
       window.addEventListener('resize', myChart.resize);
     },
     checkAuth() {
@@ -356,7 +414,7 @@ const vm = Vue.createApp({
     }
   },
   updated() {
-    if (this.isLoading) this.initPieChart()
+    if (this.isLoading) this.initChart()
   },
   watch: {
     "isLoggedIn"(newVal) {
@@ -372,6 +430,7 @@ const vm = Vue.createApp({
   },
   async mounted() {
     await this.checkAuth()
+    this.see.selectedChart = "pie"
   },
 })
 

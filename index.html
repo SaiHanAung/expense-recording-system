@@ -37,10 +37,6 @@
         integrity="sha512-IZ95TbsPTDl3eT5GwqTJH/14xZ2feLEGJRbII6bRKtE/HC6x3N4cHye7yyikadgAsuiddCY2+6gMntpVHL1gHw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <script>
-        const c = console.log.bind()
-    </script>
-
     <style>
         [v-cloak] {
             display: none;
@@ -121,6 +117,20 @@
             </template>
             <template v-else>
                 <div class="container">
+                    <div class="d-flex justify-content-center mb-2">
+                        <div class="btn-group" role="group">
+                            <button type="button" :class="
+                                    ['btn btn-outline-secondary', {'active': see.selectedChart == 'pie'}]
+                                " @click="see.selectedChart = 'pie'; initChart()">
+                                Pie chart
+                            </button>
+                            <button type="button" :class="
+                                    ['btn btn-outline-secondary', {'active': see.selectedChart == 'bar'}]
+                                " @click="see.selectedChart = 'bar'; initChart()">
+                                Bar chart
+                            </button>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col">
                             <div id="chart-container"></div>
@@ -150,12 +160,14 @@
                                                 </button>
                                             </div>
                                             <div class="col-6 d-flex justify-content-end gap-2">
-                                                <button :class="['btn btn-sm d-flex align-items-center', see.selectedMonth ? 'btn-warning' : 'btn-light']"
+                                                <button
+                                                    :class="['btn btn-sm d-flex align-items-center', see.selectedMonth ? 'btn-warning' : 'btn-light']"
                                                     data-bs-toggle="modal" data-bs-target="#filter-month-modal">
                                                     <span class="material-symbols-outlined">filter_list</span>
                                                     เดือน
                                                 </button>
-                                                <button :class="['btn btn-sm d-flex align-items-center', see.selectedType ? 'btn-warning' : 'btn-light']"
+                                                <button
+                                                    :class="['btn btn-sm d-flex align-items-center', see.selectedType ? 'btn-warning' : 'btn-light']"
                                                     data-bs-toggle="modal" data-bs-target="#filter-type-modal">
                                                     <span class="material-symbols-outlined">filter_list</span>
                                                     ประเภท
@@ -290,7 +302,7 @@
                         </div>
                         <div class="modal-footer justify-content-center">
                             <button class="btn btn-sm btn-secondary d-flex align-items-center"
-                                @click="see.selectedMonth = null">
+                                @click="see.selectedMonth = null" data-bs-dismiss="modal">
                                 <span class="material-symbols-outlined me-1">restart_alt</span>
                                 รีเซ็ต
                             </button>
@@ -317,7 +329,7 @@
                         </div>
                         <div class="modal-footer justify-content-center">
                             <button class="btn btn-sm btn-secondary d-flex align-items-center"
-                                @click="see.selectedType = null">
+                                @click="see.selectedType = null" data-bs-dismiss="modal">
                                 <span class="material-symbols-outlined me-1">restart_alt</span>
                                 รีเซ็ต
                             </button>
