@@ -134,6 +134,7 @@ const vm = Vue.createApp({
         return [...acc, reducedInnerArr];
       }, []);
 
+      c(111)
       if (this.see.selectedChart == "bar") {
         option = {
           title: {
@@ -145,7 +146,8 @@ const vm = Vue.createApp({
             trigger: 'axis',
             axisPointer: {
               type: 'shadow'
-            }
+            },
+            formatter: 'วันที่ {b} : {c} บาท'
           },
           grid: {
             left: '3%',
@@ -331,33 +333,21 @@ const vm = Vue.createApp({
   },
   computed: {
     filteredData() {
-      // /*  */
+      // /* PUSH MONTHS LIST */
       if (!this.see.months) this.see.months = []
 
       Object.keys(this.expenses).forEach(m => {
-        let findZeros = parseInt(m.slice(0, 2));
-
-        if (findZeros === 0) findZeros = parseInt(m.charAt(1));
-
-        if (this.see.months.length == 0) {
-          this.see.months.push({
+        let findZeros = parseInt(m.slice(0, 2)),
+          pushMonth = () => this.see.months.push({
             m: findZeros,
             m_y: m
           })
-        } else {
-          let monthNow = this.now.month,
-            findZero = parseInt(monthNow.slice(0, 2)),
-            notUniq = true
 
-          if (findZero === 0) findZero = parseInt(monthNow.charAt(1));
+        if (findZeros === 0) findZeros = parseInt(m.charAt(1));
 
-          if (this.see.months.some(el => el.m_y === monthNow)) notUniq = false
+        if (this.see.months.length == 0) pushMonth()
 
-          if (notUniq) this.see.months.push({
-            m: findZero,
-            m_y: monthNow
-          })
-        }
+        if (!this.see.months.some(el => el.m_y === m)) pushMonth()
       })
       // /*  */
 
@@ -376,8 +366,7 @@ const vm = Vue.createApp({
           return selectedType ? filteredData.filter(el => el.type == selectedType) : filteredData
         }
 
-      return filteredData
-        && filteredType() || []
+      return filteredData && filteredType() || []
     },
     filteredPiechart() {
       let data = []
