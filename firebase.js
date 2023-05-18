@@ -6,6 +6,7 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js";
 
@@ -134,7 +135,6 @@ const vm = Vue.createApp({
         return [...acc, reducedInnerArr];
       }, []);
 
-      c(111)
       if (this.see.selectedChart == "bar") {
         option = {
           title: {
@@ -208,27 +208,28 @@ const vm = Vue.createApp({
     },
     signIn() {
       // createUserWithEmailAndPassword(auth, this.email, this.password)
-      //     .then((userCredential) => {
+      //   .then((userCredential) => {
 
-      //         const user = userCredential.user;
+      //     const user = userCredential.user;
 
-      //         set(ref(database, 'users/' + user.uid), {
-      //                 email: this.email,
-      //                 password: this.password
-      //             })
-      //             .then(() => {
-      //                  this.initNoti('success', 'user created successfully')
-      //             })
-      //             .catch((error) => {
-      //                  this.initNoti('error', error)
-      //             });
-      //     })
-      //     .catch((error) => {
-      //         const errorCode = error.code;
-      //         const errorMessage = error.message;
-      //         // ..
-      //                  this.initNoti('error', errorMessage)
-      //     });
+      //     // set(ref(database, 'users/' + user.uid), {
+      //     //         email: this.email,
+      //     //         password: this.password
+      //     //     })
+      //     //     .then(() => {
+      //     //          this.initNoti('success', 'user created successfully')
+      //     //     })
+      //     //     .catch((error) => {
+      //     //          this.initNoti('error', error)
+      //     //     });
+      //     this.initNoti('success', 'user created successfully')
+      //   })
+      //   .catch((error) => {
+      //     const errorCode = error.code;
+      //     const errorMessage = error.message;
+      //     // ..
+      //     this.initNoti('error', errorMessage)
+      //   });
       signInWithEmailAndPassword(auth, this.email, this.password)
         .then((userCredential) => {
           // Signed in 
@@ -253,6 +254,15 @@ const vm = Vue.createApp({
           this.initNoti('error', "อีเมลหรือรหัสผ่านผิด")
         });
 
+    },
+    signOut() {
+      const auth = getAuth();
+      signOut(auth).then(() => {
+        location.reload()
+      }).catch((error) => {
+        this.initNoti('error', 'เกิดข้อผิดพลาดบางอย่าง')
+        console.error(error)
+      });
     },
     getData() {
       const starCountRef = ref(database, 'expenses');

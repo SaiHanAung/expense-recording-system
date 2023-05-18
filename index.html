@@ -110,6 +110,16 @@
             </div>
         </template>
         <template v-else>
+            <div class="d-flex flex-row justify-content-end">
+                <span class="material-symbols-outlined me-3 btn btn-sm btn-light" role="button" data-bs-toggle="dropdown">dehaze</span>
+                <ul class="dropdown-menu">
+                    <li>
+                        <button class="dropdown-item d-flex align-middle" @click="signOut">
+                            <span class="material-symbols-outlined me-1">logout</span>ออกจากระบบ
+                        </button>
+                    </li>
+                </ul>
+            </div>
             <template v-if="!isLoading">
                 <div class="text-center m-5">
                     <h1>กำลังโหลด...</h1>
