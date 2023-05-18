@@ -230,32 +230,31 @@ const vm = Vue.createApp({
       //     // ..
       //     this.initNoti('error', errorMessage)
       //   });
-      signInWithEmailAndPassword(auth, this.email, this.password)
-        .then((userCredential) => {
-          // Signed in 
-          const user = userCredential.user;
-          const time = new Date()
-          this.getData()
-          this.isLoggedIn = true
+      signInWithEmailAndPassword(
+        auth, this.email, this.password
+      ).then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        const time = new Date()
+        this.getData()
+        this.isLoggedIn = true
 
-          // update(ref(database, 'users/' + user.uid), {
-          //         last_login: time
-          //     })
-          //     .then(() => {
-          //                  this.initNoti('success', 'user logged in successfully')
-          //     })
-          //     .catch((error) => {
-          //                  this.initNoti('error', error)
-          //     });
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          this.initNoti('error', "อีเมลหรือรหัสผ่านผิด")
-        });
-
+        // update(ref(database, 'users/' + user.uid), {
+        //         last_login: time
+        //     })
+        //     .then(() => {
+        //                  this.initNoti('success', 'user logged in successfully')
+        //     })
+        //     .catch((error) => {
+        //                  this.initNoti('error', error)
+        //     });
+      }).catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        this.initNoti('error', "อีเมลหรือรหัสผ่านผิด")
+      });
     },
-    signOut() {
+    doSignOut() {
       const auth = getAuth();
       signOut(auth).then(() => {
         location.reload()
