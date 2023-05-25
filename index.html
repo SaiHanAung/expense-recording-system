@@ -252,12 +252,6 @@
                                     <label>ประเภท</label>
                                     <select class="form-select" v-model="input.type">
                                         <option v-for="type in typeList" :value="type">{{ type }}</option>
-                                        <!-- <option value="รายรับ">รายรับ</option>
-                                        <option value="รายจ่ายจำเป็น">รายจ่ายจำเป็น</option>
-                                        <option value="ค่าบ้าน">ค่าบ้าน</option>
-                                        <option value="ค่าอาหาร">ค่าอาหาร</option>
-                                        <option value="ค่าเดินทาง">ค่าเดินทาง</option>
-                                        <option value="ค่าซื้อของส่วนตัว">ค่าซื้อของส่วนตัว</option> -->
                                     </select>
                                 </div>
                                 <div class="col-12" v-if="input.type == 'รายรับ'">
@@ -267,6 +261,10 @@
                                 <div class="col-12" v-else>
                                     <label>รายจ่าย</label>
                                     <input type="number" class="form-control" v-model="input.expenses">
+                                </div>
+                                <div class="col-12">
+                                    <label>วันที่</label>
+                                    <input type="date" v-model="input.date" class="form-control">
                                 </div>
                             </div>
                         </div>

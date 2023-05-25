@@ -280,7 +280,7 @@ const vm = Vue.createApp({
           .some(el => el != null)
       ) {
         data.push({
-          date: this.now.full.format("DD-MM-YYYY"),
+          date: moment(this.input.date).format('DD-MM-YYYY'),
           name: this.input.name,
           type: this.input.type,
           income: this.input.income || 0,
@@ -322,7 +322,7 @@ const vm = Vue.createApp({
 
       if (isAdd) {
         set(ref(database, 'expenses/' + this.now.month), [{
-          date: this.now.full.format("DD-MM-YYYY"),
+          date: moment(this.input.date).format('DD-MM-YYYY'),
           name: this.input.name,
           type: this.input.type,
           income: this.input.income || 0,
@@ -403,6 +403,13 @@ const vm = Vue.createApp({
       return data
     },
     filteredMonth() {
+      // SET DEFAULT DATE INPUT
+      let currentDate = new Date();
+      let currentDateISO = currentDate.toISOString().split('T')[0];
+
+      this.input.date = currentDateISO
+      // ======================
+      
       let sliceMonth = (m) => m.slice(0, 2),
         month = this.see.selectedMonth ? sliceMonth(this.see.selectedMonth) : sliceMonth(this.now.month)
 
