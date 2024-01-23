@@ -207,52 +207,52 @@ const vm = Vue.createApp({
       });
     },
     signIn() {
-      // createUserWithEmailAndPassword(auth, this.email, this.password)
-      //   .then((userCredential) => {
+      createUserWithEmailAndPassword(auth, this.email, this.password)
+        .then((userCredential) => {
 
-      //     const user = userCredential.user;
+          const user = userCredential.user;
 
-      //     // set(ref(database, 'users/' + user.uid), {
-      //     //         email: this.email,
-      //     //         password: this.password
-      //     //     })
-      //     //     .then(() => {
-      //     //          this.initNoti('success', 'user created successfully')
-      //     //     })
-      //     //     .catch((error) => {
-      //     //          this.initNoti('error', error)
-      //     //     });
-      //     this.initNoti('success', 'user created successfully')
-      //   })
-      //   .catch((error) => {
-      //     const errorCode = error.code;
-      //     const errorMessage = error.message;
-      //     // ..
-      //     this.initNoti('error', errorMessage)
-      //   });
-      signInWithEmailAndPassword(
-        auth, this.email, this.password
-      ).then((userCredential) => {
-        // Signed in 
-        const user = userCredential.user;
-        const time = new Date()
-        this.getData()
-        this.isLoggedIn = true
+          // set(ref(database, 'users/' + user.uid), {
+          //         email: this.email,
+          //         password: this.password
+          //     })
+          //     .then(() => {
+          //          this.initNoti('success', 'user created successfully')
+          //     })
+          //     .catch((error) => {
+          //          this.initNoti('error', error)
+          //     });
+          this.initNoti('success', 'user created successfully')
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          // ..
+          this.initNoti('error', errorMessage)
+        });
+      // signInWithEmailAndPassword(
+      //   auth, this.email, this.password
+      // ).then((userCredential) => {
+      //   // Signed in 
+      //   const user = userCredential.user;
+      //   const time = new Date()
+      //   this.getData()
+      //   this.isLoggedIn = true
 
-        // update(ref(database, 'users/' + user.uid), {
-        //         last_login: time
-        //     })
-        //     .then(() => {
-        //                  this.initNoti('success', 'user logged in successfully')
-        //     })
-        //     .catch((error) => {
-        //                  this.initNoti('error', error)
-        //     });
-      }).catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        this.initNoti('error', "อีเมลหรือรหัสผ่านผิด")
-      });
+      //   // update(ref(database, 'users/' + user.uid), {
+      //   //         last_login: time
+      //   //     })
+      //   //     .then(() => {
+      //   //                  this.initNoti('success', 'user logged in successfully')
+      //   //     })
+      //   //     .catch((error) => {
+      //   //                  this.initNoti('error', error)
+      //   //     });
+      // }).catch((error) => {
+      //   const errorCode = error.code;
+      //   const errorMessage = error.message;
+      //   this.initNoti('error', "อีเมลหรือรหัสผ่านผิด")
+      // });
     },
     doSignOut() {
       const auth = getAuth();
