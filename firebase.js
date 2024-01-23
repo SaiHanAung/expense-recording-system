@@ -18,15 +18,25 @@ import {
   onValue
 } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-database.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDAAqGV8uZ-ujXky3KNpoW6aEdEdN8-YF4",
-  authDomain: "sai-dev-4d945.firebaseapp.com",
-  projectId: "sai-dev-4d945",
-  storageBucket: "sai-dev-4d945.appspot.com",
-  messagingSenderId: "301392195652",
-  appId: "1:301392195652:web:9f102e7e33ed7323ee0c11",
-  measurementId: "G-RR8EJMHZVQ"
-};
+// const firebaseConfig = {
+//   apiKey: "AIzaSyDAAqGV8uZ-ujXky3KNpoW6aEdEdN8-YF4",
+//   authDomain: "sai-dev-4d945.firebaseapp.com",
+//   projectId: "sai-dev-4d945",
+//   storageBucket: "sai-dev-4d945.appspot.com",
+//   messagingSenderId: "301392195652",
+//   appId: "1:301392195652:web:9f102e7e33ed7323ee0c11",
+//   measurementId: "G-RR8EJMHZVQ"
+// };
+ const firebaseConfig = {
+    apiKey: "AIzaSyAl3vewal-nIa6eapATTaOIQVIQaGBb-6Q",
+    authDomain: "sai-dev-4d945.firebaseapp.com",
+    databaseURL: "https://sai-dev-4d945-default-rtdb.firebaseio.com",
+    projectId: "sai-dev-4d945",
+    storageBucket: "sai-dev-4d945.appspot.com",
+    messagingSenderId: "301392195652",
+    appId: "1:301392195652:web:9f102e7e33ed7323ee0c11",
+    measurementId: "G-RR8EJMHZVQ"
+  };
 
 const c = console.log.bind()
 const app = initializeApp(firebaseConfig);
